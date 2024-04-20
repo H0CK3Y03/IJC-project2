@@ -114,27 +114,10 @@ int main(int argc, char **argv) {
     char **cb = cbuf_create(line_count);
     
     // circular buffer implementation
-    char c; // current character
+    char *line = NULL; // current character
     // reads entire file/stdin
-    while((c = getc(file)) != EOF) {
-
-        int char_index = 0; // current character index in line
-        // reads entire line (ends at newline character)
-        while((c = getc(file)) != '\n' && char_index < LINE_SIZE - 2) {
-        // LINE_SIZE - 2 because we need space for \0 at the end of the string/line (-1 because we start at 0 and another -1 for null terminator '\0')
-        // The null terminator gets added to the end of the string automatically, hence we have no need of adding it there ourselves
-            cb[end_index][char_index] = c; // puts the current character at the current index
-            char_index++;
-        }
-        cb[end_index][char_index] = c; // puts \n at the end of the string/line
-
-        // handles the circular buffer indices
-        end_index++;
-        end_index %= line_count; // to be able to get back to the beginning of the circular buffer
-        if(start_index == end_index) { // to move the start index to the oldest item in the circular buffer
-            start_index++;
-            start_index %= line_count; // to be able to get back to the beginning of the circular buffer
-        }
+    while(fgets(line, LINE_SIZE, file) != NULL) {
+        cbuf_put(cb, line);
     }
 
     // prints the circular buffer
