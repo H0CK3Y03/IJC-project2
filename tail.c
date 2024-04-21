@@ -115,9 +115,22 @@ int main(int argc, char **argv) {
     
     // circular buffer implementation
     char *line = NULL; // current character
+    int overflow_flag = 0; // a flag that determines whether a line is bigger than allowed
     // reads entire file/stdin
-    while(fgets(line, LINE_SIZE, file) != NULL) {
+    while(fgets(line, LINE_SIZE - 1, file) != NULL) {
+        // LINE_SIZE - 1 to accomadate for the null terminator '\0'
         cbuf_put(cb, line);
+        // if current line is longer than is allowed
+        if(line[strlen(line) - 1] != '\n') {
+            if(!overflow_flag) {
+                fprintf(stderr, "Warning: Line is bigger than the max allowed size.\n");
+                overflow_flag = 1;
+            }
+            while(line[strlen(line) - 1] != '\n') {
+                // reads the rest of the line if the line is bigger than the max allowed size
+                fgets(line, LINE_SIZE - 1, file);
+            }
+        }
     }
 
     // prints the circular buffer
