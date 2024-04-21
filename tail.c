@@ -10,6 +10,7 @@
 
 #define BUFFER_SIZE 1000000
 #define LINE_SIZE 2047
+// 1 char (not \n or \0 those ae not counted) 
 
 int line_count = 10; // default amount of lines to be printed
 int start_index = 0; // index of oldest item in circular buffer
@@ -43,7 +44,7 @@ int main(int argc, char **argv) {
             char *endptr;
             line_count = strtol(argv[2], &endptr, 10);
             if(endptr == argv[2]) { // checks if the conversion was successful
-            // endPtr should be a null terminator '\0' after a successful conversion
+            // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
             }
@@ -63,7 +64,7 @@ int main(int argc, char **argv) {
             line_count = strtol(argv[2], &endptr, 10);
 
             if(endptr == argv[2]) { // checks if the conversion was successful
-            // endPtr should be a null terminator '\0' after a successful conversion
+            // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
             }
@@ -117,8 +118,8 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    // if LINE_SIZE is 1, then don't print anything, 1 is only enough space for the null terminator '\n'
-    if(LINE_SIZE == 1) {
+    // if LINE_SIZE is 0, then don't print anything
+    if(LINE_SIZE == 0) {
         if(file != NULL) {
             fclose(file);
         }
@@ -136,29 +137,47 @@ int main(int argc, char **argv) {
     char **cb = cbuf_create(line_count);
     
     // circular buffer implementation
-    char *line = malloc(LINE_SIZE * sizeof(char)); // current line
+    char *line = malloc((LINE_SIZE + 2) * sizeof(char)); // current line (+2 to accomadate for \n \0)
     if(line == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for the current line");
+        return 1;
+    }
+    char *temp_line = malloc((LINE_SIZE + 2) * sizeof(char)); // current line (+2 to accomadate for \n \0)
+    if(temp_line == NULL) {
         fprintf(stderr, "Error: Failed to allocate memory for the current line");
         return 1;
     }
     int overflow_flag = 0; // a flag that determines whether a line is bigger than allowed
     // reads entire file/stdin
-    while(fgets(line, LINE_SIZE, file) != NULL) {
-        cbuf_put(cb, line);
-        // printf("%ld\n", strlen(line));
+    while(fgets(line, (LINE_SIZE + 2), file) != NULL) {
+        // LINE_SIZE + 2 for the null terminator and the newline character
 
         // if current line is longer than is allowed
-        if((strlen(line) == (LINE_SIZE - 1)) && (line[strlen(line) - 1] != '\n')) {
+        if((strlen(line) == (LINE_SIZE + 1)) && (line[strlen(line) - 1] != '\n')) {
             // LINE_SIZE - 1 to accomadate for the null terminator '\0'
             if(!overflow_flag) {
                 fprintf(stderr, "Warning: Line is bigger than the max allowed size.\n");
                 overflow_flag = 1;
             }
-            while((fgets(line, LINE_SIZE, file) != NULL) && (line[strlen(line) - 1] != '\n')) {
+            while((fgets(temp_line, (LINE_SIZE + 2), file) != NULL) && (temp_line[strlen(line) - 1] != '\n')) {
                 // reads the rest of the line if the line is bigger than the max allowed size
                 ;                
             }
+            // if the last character of the line is a newline character
+            if(temp_line[strlen(temp_line) - 1] == '\n') {
+                line[LINE_SIZE] = '\n';
+                line[LINE_SIZE + 1] = '\0';
+                // ends on a newline character
+            }
+            // if the last character of the line is not a newline character
+            if(temp_line[strlen(temp_line) - 1] != '\n') {
+                line[LINE_SIZE] = '\0';
+                line[LINE_SIZE + 1] = '\0';
+                // ends on a null terminator
+            }
         }
+        // puts the line into the circular buffer
+        cbuf_put(cb, line);
     }
 
     // prints the circular buffer
@@ -168,6 +187,7 @@ int main(int argc, char **argv) {
 
     // circular buffer free
     free(line);
+    free(temp_line);
     cbuf_free(cb);
     if(file != NULL) {
         fclose(file);
@@ -184,7 +204,7 @@ char **cbuf_create(int n) { // n -> number of lines in the circular buffer
         exit(EXIT_FAILURE);
     }
     for(int i = 0; i < n; i++) {
-        cb[i] = malloc(LINE_SIZE * sizeof(char));
+        cb[i] = malloc((LINE_SIZE + 2) * sizeof(char)); // LINE_SIZE + 2 for the null terminator and the newline character
         if(cb[i] == NULL) {
             fprintf(stderr, "Error: Memory allocation for circular buffer failed.\n");
             exit(EXIT_FAILURE);
