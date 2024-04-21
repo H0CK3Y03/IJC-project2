@@ -27,6 +27,7 @@ struct Word {
 int main() {
     struct Word *words = word_ctor();
     int word_count = 0; // number of different words
+    // allocating memory for the string from stdin
     char *cur_string = malloc(sizeof(char) * MAX_WORD_LENGTH);
     if(cur_string == NULL) {
         fprintf(stderr, "Error: Unable to store string.\n");
@@ -39,6 +40,7 @@ int main() {
         }
         word_check(&words, cur_string, &word_count);
     }
+    // printing words and their counts
     for(int i = 0; i < word_count; i++) {
         printf("%s %d\n", words[i].string, words[i].count);
     }
@@ -50,20 +52,12 @@ int main() {
 }
 
 struct Word *word_ctor() {
-    // allocates memory for the structure Word
+    // initial allocation of memory for the structure Word
     struct Word *words = malloc(sizeof(struct Word));
     if(words == NULL) {
         fprintf(stderr, "Error: Word memory allocation failed.\n");
         exit(EXIT_FAILURE);
     }
-    // // allocates memory for the string in the structure Word
-    // words -> string = malloc(sizeof(char) * MAX_WORD_LENGTH);
-    // if(words -> string == NULL) {
-    //     fprintf(stderr, "Error: Unable to allocate memory for string in Word structure.\n");
-    //     exit(1);
-    // }
-    // // initializes the value to 0 in the structure Word
-    // words -> count = 0;
     return words;
 }
 
