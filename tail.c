@@ -111,7 +111,25 @@ int main(int argc, char **argv) {
     }
 
     if(line_count == 0) {
+        if(file != NULL) {
+            fclose(file);
+        }
         return 0;
+    }
+
+    // if LINE_SIZE is 1, then don't print anything, 1 is only enough space for the null terminator '\n'
+    if(LINE_SIZE == 1) {
+        if(file != NULL) {
+            fclose(file);
+        }
+        return 0;
+    }
+
+    // if the buffer size is bigger than allowed
+    if(line_count > BUFFER_SIZE) {
+        line_count = BUFFER_SIZE;
+        fprintf(stderr, "Warning: Buffer size is bigger than the max allowed size.\n");
+        fprintf(stderr, "Warning: Buffer size is now set to the max allowed size.\n");
     }
 
     // circular buffer creation
@@ -127,9 +145,11 @@ int main(int argc, char **argv) {
     // reads entire file/stdin
     while(fgets(line, LINE_SIZE, file) != NULL) {
         cbuf_put(cb, line);
+        // printf("%ld\n", strlen(line));
 
         // if current line is longer than is allowed
-        if((strlen(line) == LINE_SIZE) && (line[strlen(line) - 1] != '\n')) {
+        if((strlen(line) == (LINE_SIZE - 1)) && (line[strlen(line) - 1] != '\n')) {
+            // LINE_SIZE - 1 to accomadate for the null terminator '\0'
             if(!overflow_flag) {
                 fprintf(stderr, "Warning: Line is bigger than the max allowed size.\n");
                 overflow_flag = 1;
