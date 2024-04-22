@@ -28,13 +28,16 @@ int main() {
     struct Word *words = word_ctor();
     int word_count = 0; // number of different words
     // allocating memory for the string from stdin
-    char *cur_string = malloc(sizeof(char) * MAX_WORD_LENGTH);
+    char *cur_string = malloc((sizeof(char) * MAX_WORD_LENGTH) + 1); // + 1 for the null terminator
     if(cur_string == NULL) {
         fprintf(stderr, "Error: Unable to store string.\n");
         return 1;
     }
     // stdin handling
     while(scanf("%s", cur_string) != EOF) {
+        if(strlen(cur_string) > MAX_WORD_LENGTH) {
+            continue;
+        }
         if((strlen(cur_string) == 0) && (word_count == 0)) {
             return 0;
         }
@@ -92,7 +95,7 @@ struct Word *add_word(struct Word **words, char *cur_string, int *word_count) {
     }
 
     // allocates memory for the string in the new word structure
-    new_words[(*word_count) - 1].string = malloc(sizeof(char) * MAX_WORD_LENGTH);
+    new_words[(*word_count) - 1].string = malloc((sizeof(char) * MAX_WORD_LENGTH) + 1); // + 1 for null terminator
     if(new_words[((*word_count) - 1)].string == NULL) {
         fprintf(stderr, "Error: Unable to reallocate memory for string in new word.\n");
         exit(1);
