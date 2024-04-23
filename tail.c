@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
         if(!strcmp(argv[1], "-n")) {
             char *endptr;
             line_count = strtol(argv[2], &endptr, 10);
-            if(endptr == argv[2]) { // checks if the conversion was successful
+            if(endptr == argv[2] || strlen(endptr) > 0) { // checks if the conversion was successful
             // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
             char *endptr;
             line_count = strtol(argv[2], &endptr, 10);
 
-            if(endptr == argv[2]) { // checks if the conversion was successful
+            if(endptr == argv[2] || strlen(endptr) > 0) { // checks if the conversion was successful
             // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
             char *endptr;
             line_count = strtol(argv[3], &endptr, 10);
 
-            if(endptr == argv[3]) { // checks if the conversion was successful
+            if(endptr == argv[3] || strlen(endptr) > 0) { // checks if the conversion was successful
             // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
