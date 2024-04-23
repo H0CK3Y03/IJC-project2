@@ -4,7 +4,7 @@
 // 22.04.2024
 
 #include <stdlib.h>
-// #include "htab.h"
+#include "htab.h"
 #include "htab_opaque.h"
 
 htab_t *htab_init(const size_t n) {
