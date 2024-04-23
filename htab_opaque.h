@@ -3,8 +3,8 @@
 // 2. príklad | htab_opaque.h
 // 22.04.2024
 
-#ifndef HTAB_STRUCT_H
-#define HTAB_STRUCT_H
+#ifndef HTAB_OPAQUE_H
+#define HTAB_OPAQUE_H
 
 #include "htab.h"
 
@@ -19,4 +19,4 @@ struct htab {
     htab_item_t **arr; // points to [pair, next] <==> [(key, value), next]
 };
 
-#endif //HTAB_STRUCT_H
+#endif //HTAB_OPAQUE_H

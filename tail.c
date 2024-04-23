@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
             line_count = strtol(argv[3], &endptr, 10);
 
             if(endptr == argv[3]) { // checks if the conversion was successful
-            // endPtr should be a null terminator '\0' after a successful conversion
+            // endptr should be a null terminator '\0' after a successful conversion
                 fprintf(stderr, "Error: Wrong number value.\n");
                 return 1;
             }

@@ -74,7 +74,7 @@ void word_dtor(struct Word *words, int word_count) {
 void word_check(struct Word **words, char *cur_string, int *word_count) {
     // iterates through all existing words
     for(int i = 0; i < (*word_count); i++) {
-        if(strcmp((*words)[i].string, cur_string) == 0) {
+        if(!strcmp((*words)[i].string, cur_string)) {
             // increments the count of the word if it already exists
             (*words)[i].count++;
             return;
