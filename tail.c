@@ -10,7 +10,7 @@
 
 #define BUFFER_SIZE 1000000
 #define LINE_SIZE 2047
-// 1 char (not \n or \0 those ae not counted) 
+// 1 char (not \n or \0 those are not counted) 
 
 int line_count = 10; // default amount of lines to be printed
 int start_index = 0; // index of oldest item in circular buffer
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 
         // if current line is longer than is allowed
         if((strlen(line) == (LINE_SIZE + 1)) && (line[strlen(line) - 1] != '\n')) {
-            // LINE_SIZE - 1 to accomadate for the null terminator '\0'
+            // LINE_SIZE + 1 to accomadate for the new line character without the null terminator '\0'
             if(!overflow_flag) {
                 fprintf(stderr, "Warning: Line is bigger than the max allowed size.\n");
                 overflow_flag = 1;
@@ -216,7 +216,7 @@ char **cbuf_create(int n) { // n -> number of lines in the circular buffer
 void cbuf_put(char **cb, char *line) {
     strcpy(cb[end_index], line);
     // moves the start index to the oldest item in the circular buffer
-    if(start_index == end_index && cb[start_index + 1] != "") {
+    if(start_index == end_index) {
         start_index++;
         start_index %= line_count;
     }
