@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "htab.h"
 #include "io.h"
-
+// #define STATISTICS
 #define MAX_WORD_LENGTH 333 // 332 characters + 1 for the null terminator '\0'
 #define HASH_TABLE_SIZE 28657
 /*

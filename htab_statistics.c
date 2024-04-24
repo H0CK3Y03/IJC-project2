@@ -53,5 +53,5 @@ void htab_statistics(const htab_t *t) {
     // finds the average amount of items in a list
     avg = (double) total_count / non_empty_bucket_count;
     // prints the statistics to stderr
-    fprintf(stderr, "(%ld, %ld, %lf)", min, max, avg);
+    fprintf(stderr, "(%ld, %ld, %lf)\n", min, max, avg);
 }
