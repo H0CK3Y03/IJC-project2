@@ -46,15 +46,26 @@ int main() {
         fprintf(stderr, "Error: failed to allocate memory for hash table.\n");
         return 1;
     }
-
-    // read words from stdin
+    int word_length = 0;
     char word[MAX_WORD_LENGTH] = {0};
-    while(read_word(word, MAX_WORD_LENGTH, stdin) > 0) {
+        // read words from stdin
+    while((word_length = read_word(word, MAX_WORD_LENGTH, stdin)) > 0) {
+        // printf("----%s----\n", word);
         // add word to hash table
-        if(htab_lookup_add(t, word) == NULL) {
+        htab_pair_t *pair;
+        if((pair = htab_lookup_add(t, word)) == NULL) {
             fprintf(stderr, "Error: Unable to add word to hash table.\n");
             htab_free(t);
             return 1;
+        }
+        // increment value of the word (it's count)
+        pair -> value++;
+        // clear the word array (otherwise the characters persist in the next iteration)
+        for(int i = 0; i < MAX_WORD_LENGTH; i++) {
+            word[i] = '\0';
+            if(word[i + 1] == '\0') {
+                break;
+            }
         }
     }
 

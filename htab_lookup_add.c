@@ -13,7 +13,6 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
     if(pair != NULL) {
         return pair;
     }
-
     // if key is not in hash table, add it
     // find index of key
     size_t index = (htab_hash_function(key) % t -> arr_size);
