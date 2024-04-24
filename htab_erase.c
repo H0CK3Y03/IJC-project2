@@ -3,6 +3,7 @@
 // 2. príklad | htab_erase.c
 // 22.04.2024
 
+#include <stdlib.h>
 #include "htab.h"
 #include "htab_opaque.h"
 
@@ -37,8 +38,7 @@ bool htab_erase(htab_t *t, htab_key_t key) {
             }
 
             // free the memory
-            free((item -> pair).key);
-            free(item -> pair);
+            free((char *)(item -> pair).key);
             free(item);
 
             // decrement the size of the hash table

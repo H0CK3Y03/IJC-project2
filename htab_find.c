@@ -19,6 +19,9 @@ htab_pair_t *htab_find(const htab_t *t, htab_key_t key) {
     while(item != NULL) {
         // If the key is found, return the pointer to the pair
         if(!strcmp((item -> pair).key, key)) {
+            // Increase the value of the pair
+            (item -> pair).value++;
+            // Return the pointer to the pair
             return &(item -> pair);
         }
 

@@ -10,7 +10,7 @@
 
 typedef struct htab_item {
     htab_pair_t pair;
-    htab_item_t *next;
+    struct htab_item *next;
 } htab_item_t;
 
 struct htab {
@@ -19,4 +19,4 @@ struct htab {
     htab_item_t **arr; // points to [pair, next] <==> [(key, value), next]
 };
 
-#endif //HTAB_OPAQUE_H
+#endif // HTAB_OPAQUE_H

@@ -3,6 +3,7 @@
 // 2. príklad | htab_clear.c
 // 22.04.2024
 
+#include <stdlib.h> // for free
 #include "htab.h"
 #include "htab_opaque.h"
 
@@ -11,9 +12,9 @@ void htab_clear(htab_t *t) {
         return;
     }
     // create pointers to items to help with iteration/moving to the next item
-    htab_item_t *item;
-    htab_item_t *next_item;
     for(size_t i = 0; i < (t -> arr_size); i++) {
+        htab_item_t *item;
+        htab_item_t *next_item;
         // store the current item pointer into item
         item = t -> arr[i];
         // iterate through the linked list that item is pointing to
@@ -21,8 +22,10 @@ void htab_clear(htab_t *t) {
             // points to the next item in the list
             next_item = item -> next;
             // free the item's key
-            free(item -> pair.key);
-            // free the item
+            if((item -> pair).key != NULL) {
+                free((char *) ((item -> pair).key));
+            }
+
             free(item);
 
             // set item to the next item in the list

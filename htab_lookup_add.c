@@ -3,6 +3,7 @@
 // 2. príklad | htab_find.c
 // 22.04.2024
 
+#include <stdlib.h>
 #include "htab.h"
 #include "htab_opaque.h"
 
@@ -21,24 +22,33 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
     if(new_pair == NULL) {
         return NULL;
     }
+    char *new_key = malloc(sizeof(char) * (strlen(key) + 1));
+    if(new_key == NULL) {
+        free(new_pair);
+        return NULL;
+    }
+    strcpy(new_key, key);
     // set key and value
-    new_pair -> key = key;
-    new_pair -> value = 0;
+    new_pair -> key = new_key;
+    new_pair -> value = 1;
 
     // create new item
     htab_item_t *item = malloc(sizeof(htab_item_t));
     if(item == NULL) {
+        free(new_key);
         free(new_pair);
         return NULL;
     }
     // initialize item
-    item -> pair = *(new_pair);
+    item -> pair = *new_pair; // copies contents of new_pair into item
     item -> next = NULL;
+
+    // free new_pair, since it is no longer needed
+    free(new_pair);
 
     // temporary pointer to htab_item_t to help find the end of the list
     if(t -> arr[index] == NULL) {
         t -> arr[index] = item;
-        return new_pair;
     }
     else {
         htab_item_t *temp = t -> arr[index];
