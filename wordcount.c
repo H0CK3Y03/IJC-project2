@@ -8,7 +8,7 @@
 #include "htab.h"
 #include "io.h"
 // #define STATISTICS
-#define MAX_WORD_LENGTH 333 // 332 characters + 1 for the null terminator '\0'
+#define MAX_WORD_LENGTH 255
 #define HASH_TABLE_SIZE 28657
 /*
 Veľkost hash tabuľky je 28657. Vybral som toto číslo,
@@ -36,7 +36,7 @@ size_t htab_hash_function(const char* str) {
 
 // prints all item keys and their values in the hash table
 void print_table(htab_pair_t *data) {
-    printf("%s %d\n", data->key, data->value);
+    printf("%s\t%d\n", data->key, data->value);
 }
 
 int main() {
@@ -50,7 +50,6 @@ int main() {
     char word[MAX_WORD_LENGTH] = {0};
         // read words from stdin
     while((word_length = read_word(word, MAX_WORD_LENGTH, stdin)) > 0) {
-        // printf("----%s----\n", word);
         // add word to hash table
         htab_pair_t *pair;
         if((pair = htab_lookup_add(t, word)) == NULL) {
